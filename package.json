@@ -1,0 +1,43 @@
+{
+  "name": "create-symlink",
+  "version": "0.1.0",
+  "description": "Create a symbolic link",
+  "repository": "shinnn/create-symlink",
+  "author": "Shinnosuke Watanabe (https://github.com/shinnn)",
+  "scripts": {
+    "pretest": "eslint --fix --format=codeframe index.js test.js",
+    "test": "node --throw-deprecation --track-heap-objects test.js",
+    "coverage": "istanbul cover --print=both test.js"
+  },
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "symlink",
+    "symblic",
+    "link",
+    "file",
+    "junction",
+    "fs",
+    "path",
+    "promise",
+    "promisified",
+    "async"
+  ],
+  "dependencies": {
+    "graceful-fs": "^4.1.11",
+    "is-plain-obj": "^1.1.0",
+    "pinkie-promise": "^2.0.1"
+  },
+  "devDependencies": {
+    "@shinnn/eslint-config-node-legacy": "^3.0.0",
+    "eslint": "^3.15.0",
+    "istanbul": "^0.4.5",
+    "run-series": "^1.1.4",
+    "tape": "^4.6.3"
+  },
+  "eslintConfig": {
+    "extends": "@shinnn/node-legacy"
+  }
+}
