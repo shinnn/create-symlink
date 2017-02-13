@@ -4,14 +4,14 @@
 */
 'use strict';
 
-var inspect = require('util').inspect;
+const inspect = require('util').inspect;
 
-var isPlainObj = require('is-plain-obj');
-var symlink = require('graceful-fs').symlink;
+const isPlainObj = require('is-plain-obj');
+const symlink = require('graceful-fs').symlink;
 
-var typeRe = /dir|file|junction/;
-var caseInsensitiveTypeRe = /dir|file|junction/i;
-var TYPE_ERROR = 'Expected `type` option to be a valid symlink type – \'dir\', \'file\' or \'junction\'';
+const typeRe = /dir|file|junction/;
+const caseInsensitiveTypeRe = /dir|file|junction/i;
+const TYPE_ERROR = 'Expected `type` option to be a valid symlink type – \'dir\', \'file\' or \'junction\'';
 
 module.exports = function createSymlink(target, path, option) {
   if (typeof target !== 'string') {
@@ -41,31 +41,27 @@ module.exports = function createSymlink(target, path, option) {
 
     if (option.type !== undefined) {
       if (typeof option.type !== 'string') {
-        return Promise.reject(new TypeError(
-          TYPE_ERROR + ', but got a non-strng value ' +
-          inspect(option.type) +
-          '.'
-        ));
+        return Promise.reject(new TypeError(`${TYPE_ERROR}, but got a non-strng value ${
+          inspect(option.type)
+        }.`));
       }
 
       if (option.type.length === 0) {
-        return Promise.reject(new Error(TYPE_ERROR + ', but got \'\' (empty string).'));
+        return Promise.reject(new Error(`${TYPE_ERROR}, but got '' (empty string).`));
       }
 
       if (!typeRe.test(option.type)) {
-        return Promise.reject(new Error(
-          TYPE_ERROR + ', but got an unknown type ' +
-          inspect(option.type) +
-          (caseInsensitiveTypeRe.test(option.type) ? '. Symlink type must be lower case.' : '.')
-        ));
+        return Promise.reject(new Error(`${TYPE_ERROR}, but got an unknown type ${inspect(option.type)}.${
+          caseInsensitiveTypeRe.test(option.type) ? ' Symlink type must be lower case.' : ''
+        }`));
       }
     }
   } else {
     option = {type: null};
   }
 
-  return new Promise(function(resolve, reject) {
-    symlink(target, path, option.type, function(err) {
+  return new Promise((resolve, reject) => {
+    symlink(target, path, option.type, err => {
       if (err) {
         reject(err);
         return;
