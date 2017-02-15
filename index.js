@@ -4,10 +4,10 @@
 */
 'use strict';
 
-const inspect = require('util').inspect;
+const {inspect} = require('util');
 
 const isPlainObj = require('is-plain-obj');
-const symlink = require('graceful-fs').symlink;
+const {symlink} = require('graceful-fs');
 
 const typeRe = /dir|file|junction/;
 const caseInsensitiveTypeRe = /dir|file|junction/i;
