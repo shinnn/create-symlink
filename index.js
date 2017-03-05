@@ -13,55 +13,67 @@ const typeRe = /dir|file|junction/;
 const caseInsensitiveTypeRe = /dir|file|junction/i;
 const TYPE_ERROR = 'Expected `type` option to be a valid symlink type – \'dir\', \'file\' or \'junction\'';
 
-module.exports = function createSymlink(target, path, option) {
-  if (typeof target !== 'string') {
-    return Promise.reject(new TypeError(
-      'Expected a symlink target (string), but got a non-string value ' +
-      inspect(target) +
-      '.'
-    ));
-  }
-
-  if (typeof path !== 'string') {
-    return Promise.reject(new TypeError(
-      'Expected a path (string) where to create a symlink, but got a non-string value ' +
-      inspect(path) +
-      '.'
-    ));
-  }
-
-  if (option !== null && option !== undefined) {
-    if (!isPlainObj(option)) {
-      return Promise.reject(new TypeError(
-        'The third argument of create-symlink must be an object, but got ' +
-        inspect(option) +
-        '.'
-      ));
-    }
-
-    if (option.type !== undefined) {
-      if (typeof option.type !== 'string') {
-        return Promise.reject(new TypeError(`${TYPE_ERROR}, but got a non-strng value ${
-          inspect(option.type)
-        }.`));
-      }
-
-      if (option.type.length === 0) {
-        return Promise.reject(new Error(`${TYPE_ERROR}, but got '' (empty string).`));
-      }
-
-      if (!typeRe.test(option.type)) {
-        return Promise.reject(new Error(`${TYPE_ERROR}, but got an unknown type ${inspect(option.type)}.${
-          caseInsensitiveTypeRe.test(option.type) ? ' Symlink type must be lower case.' : ''
-        }`));
-      }
-    }
-  } else {
-    option = {type: null};
-  }
-
+module.exports = function createSymlink(...args) {
   return new Promise((resolve, reject) => {
-    symlink(target, path, option.type, err => {
+    const argLen = args.length;
+
+    if (argLen !== 2 && argLen !== 3) {
+      throw new TypeError(
+        `Expected 2 or 3 arguments (target: <string>, path: <string>[, option: <object>]), but got ${
+          argLen === 0 ? 'no' : argLen
+        } arguments instead.`
+      );
+    }
+
+    const [target, path, option] = args;
+
+    if (typeof target !== 'string') {
+      throw new TypeError(`Expected a symlink target (string), but got a non-string value ${
+        inspect(target)
+      }.`);
+    }
+
+    if (typeof path !== 'string') {
+      throw new TypeError(`Expected a path (string) where to create a symlink, but got a non-string value ${
+        inspect(path)
+      }.`);
+    }
+
+    if (option !== null && option !== undefined) {
+      if (!isPlainObj(option)) {
+        throw new TypeError(
+          'The third argument of create-symlink must be an object, but got ' +
+          inspect(option) +
+          '.'
+        );
+      }
+
+      if (option.type !== undefined) {
+        if (typeof option.type !== 'string') {
+          throw new TypeError(`${TYPE_ERROR}, but got a non-strng value ${
+            inspect(option.type)
+          }.`);
+        }
+
+        if (option.type.length === 0) {
+          throw new Error(`${TYPE_ERROR}, but got '' (empty string).`);
+        }
+
+        if (!typeRe.test(option.type)) {
+          throw new Error(`${TYPE_ERROR}, but got an unknown type ${inspect(option.type)}.${
+            caseInsensitiveTypeRe.test(option.type) ? ' Symlink type must be lower case.' : ''
+          }`);
+        }
+      }
+    }
+
+    const symlinkArgs = [target, path];
+
+    if (option) {
+      symlinkArgs.push(option.type);
+    }
+
+    symlink(...symlinkArgs, err => {
       if (err) {
         reject(err);
         return;

@@ -37,6 +37,9 @@
     "tape": "^4.6.3"
   },
   "eslintConfig": {
-    "extends": "@shinnn/node"
+    "extends": "@shinnn/node",
+    "rules": {
+      "complexity": "off"
+    }
   }
 }

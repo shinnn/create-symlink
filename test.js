@@ -8,7 +8,7 @@ const runSeries = require('run-series');
 const test = require('tape');
 
 test('createSymlink()', t => {
-  t.plan(12);
+  t.plan(14);
 
   createSymlink('index.js', '.tmp').then(arg => {
     t.strictEqual(arg, undefined, 'should pass no arguments to the onResolved function.');
@@ -94,6 +94,24 @@ test('createSymlink()', t => {
       'Error: Expected `type` option to be a valid symlink type – \'dir\', \'file\' or \'junction\', ' +
       'but got an unknown type \'DIR\'. Symlink type must be lower case.',
       'should suggest using lowercase symlink type.'
+    );
+  });
+
+  createSymlink().then(fail, err => {
+    t.strictEqual(
+      err.toString(),
+      'TypeError: Expected 2 or 3 arguments (target: <string>, path: <string>[, option: <object>]), ' +
+      'but got no arguments instead.',
+      'should fail when it takes no argumnts.'
+    );
+  });
+
+  createSymlink('_', '_', {}, '_').then(fail, err => {
+    t.strictEqual(
+      err.toString(),
+      'TypeError: Expected 2 or 3 arguments (target: <string>, path: <string>[, option: <object>]), ' +
+      'but got 4 arguments instead.',
+      'should fail when it takes too many argumnts.'
     );
   });
 });
