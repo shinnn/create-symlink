@@ -6,6 +6,7 @@
 
 const {inspect} = require('util');
 
+const inspectWithKind = require('inspect-with-kind');
 const isPlainObj = require('is-plain-obj');
 const {symlink} = require('graceful-fs');
 
@@ -29,29 +30,27 @@ module.exports = function createSymlink(...args) {
 
     if (typeof target !== 'string') {
       throw new TypeError(`Expected a symlink target (string), but got a non-string value ${
-        inspect(target)
+        inspectWithKind(target)
       }.`);
     }
 
     if (typeof path !== 'string') {
       throw new TypeError(`Expected a path (string) where to create a symlink, but got a non-string value ${
-        inspect(path)
+        inspectWithKind(path)
       }.`);
     }
 
     if (option !== null && option !== undefined) {
       if (!isPlainObj(option)) {
-        throw new TypeError(
-          'The third argument of create-symlink must be an object, but got ' +
-          inspect(option) +
-          '.'
-        );
+        throw new TypeError(`The third argument of create-symlink must be an object, but got ${
+          inspectWithKind(option)
+        }.`);
       }
 
       if (option.type !== undefined) {
         if (typeof option.type !== 'string') {
           throw new TypeError(`${TYPE_ERROR}, but got a non-strng value ${
-            inspect(option.type)
+            inspectWithKind(option.type)
           }.`);
         }
 

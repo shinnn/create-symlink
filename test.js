@@ -37,10 +37,10 @@ test('createSymlink()', t => {
     );
   });
 
-  createSymlink(new Uint8Array(), 'a').then(fail, err => {
+  createSymlink(['?'], 'a').then(fail, err => {
     t.strictEqual(
       err.toString(),
-      'TypeError: Expected a symlink target (string), but got a non-string value Uint8Array [  ].',
+      'TypeError: Expected a symlink target (string), but got a non-string value [ \'?\' ] (array).',
       'should fail when the first argument is not a string.'
     );
   });

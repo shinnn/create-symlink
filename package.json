@@ -27,6 +27,7 @@
   ],
   "dependencies": {
     "graceful-fs": "^4.1.11",
+    "inspect-with-kind": "^1.0.0",
     "is-plain-obj": "^1.1.0"
   },
   "devDependencies": {
